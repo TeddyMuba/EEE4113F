@@ -1,5 +1,5 @@
 const data = require("./data");
-const INTERVAL_TIME = 5000;
+const INTERVAL_TIME = 10000;
 
 const randomIntFromInterval = (min = 0, max = 100) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
