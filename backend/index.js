@@ -8,6 +8,30 @@ const { randomizer } = require("./services");
 const app = express();
 const port = 3001;
 
+const http = require("http");
+const socketIo = require("socket.io");
+
+const server = http.createServer(app);
+const io = socketIo(server);
+
+io.on("connection", (socket) => {
+  console.log("New client connected");
+
+  socket.on("join", () => {
+    socket.emit("message", data?.[data?.length - 1]);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+  });
+
+  // Handle custom events from the client
+  socket.on("message", (data) => {
+    console.log("Received message from client:", data);
+    // Broadcast the received message to all clients except the sender
+    socket.broadcast.emit("message", data);
+  });
+});
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -60,7 +84,7 @@ app.get("/latest-motion-detected", (req, res) => {
   res.json(data?.[data?.length - 1]);
 });
 // Start the server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
-  randomizer();
+  randomizer(io);
 });

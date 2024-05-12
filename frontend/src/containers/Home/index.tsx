@@ -11,10 +11,10 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import React from "react";
-import { API_HOST } from "../../constants";
-import axios from "axios";
-import { MotionEventData } from "../../types";
 import moment from "moment";
+import io from "socket.io-client";
+import { WEB_SOCKET_HOST } from "../../constants";
+import { MotionEventData } from "../../types";
 import {
   AccordionCard,
   EmptyListHandler,
@@ -26,24 +26,19 @@ import { FaExclamationTriangle, FaImage } from "react-icons/fa";
 
 const Home: React.FC = () => {
   const [data, setData] = React.useState<MotionEventData>();
-  const [isLoading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    setLoading(true);
-    const pollingInterval = setInterval(() => {
-      (async () => {
-        try {
-          const { data } = await axios(API_HOST + "/latest-motion-detected");
-          setData(data);
-        } catch (error) {
-          console.log(error);
-        }
-      })();
-    }, 1000);
-    setLoading(false);
-    return () => {
-      clearInterval(pollingInterval);
-    };
+    const socket = io(WEB_SOCKET_HOST, {
+      transports: ["websocket"],
+    });
+
+    socket.emit("join");
+    socket.on("motion-detected", (data) => {
+      setData(data);
+    });
+    socket.on("message", (data) => {
+      setData(data);
+    });
   }, []);
 
   const event = data;
@@ -53,7 +48,7 @@ const Home: React.FC = () => {
   return (
     <>
       <Nav />
-      {!isLoading && !event ? (
+      {!event ? (
         <EmptyListHandler
           title="No Event Recorded Yet"
           subTitle="Data will be displayed here whenever a motion detection event occurs."

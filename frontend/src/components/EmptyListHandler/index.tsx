@@ -15,16 +15,15 @@ const EmptyListHandler: React.FC<EmptyListHandlerProps> = ({
     <Container>
       <VStack>
         <Image src={images[404]} alt="404 images" width="80%" />
-        <Heading>{title}</Heading>
-        <Text>{subTitle}</Text>
+        <Heading textAlign="center">
+          {title ?? "there is nothing here."}
+        </Heading>
+        <Text textAlign="center">
+          {subTitle ?? "Go ahead and create your first record to get started."}
+        </Text>
       </VStack>
     </Container>
   );
 };
 
 export default EmptyListHandler;
-
-EmptyListHandler.defaultProps = {
-  title: "there is nothing here.",
-  subTitle: "Go ahead and create your first record to get started.",
-};
