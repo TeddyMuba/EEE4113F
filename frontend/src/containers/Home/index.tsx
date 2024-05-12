@@ -26,6 +26,7 @@ import { FaExclamationTriangle, FaImage } from "react-icons/fa";
 
 const Home: React.FC = () => {
   const [data, setData] = React.useState<MotionEventData>();
+  const [isSocketConnected, setIsSocketConnected] = React.useState(false);
 
   React.useEffect(() => {
     const socket = io(WEB_SOCKET_HOST, {
@@ -33,6 +34,12 @@ const Home: React.FC = () => {
     });
 
     socket.emit("join");
+    socket.on("connect", () => {
+      setIsSocketConnected(true);
+    });
+    socket.on("disconnect", () => {
+      setIsSocketConnected(false);
+    });
     socket.on("motion-detected", (data) => {
       setData(data);
     });
@@ -55,7 +62,22 @@ const Home: React.FC = () => {
         />
       ) : (
         <Container py={8} maxW="container.lg">
-          <ExcelDownloader />
+          <Flex align="center" justify="space-between">
+            <ExcelDownloader />
+            <HStack fontSize="x-small">
+              <Box
+                borderRadius="100%"
+                p={1}
+                bg={isSocketConnected ? "green.200" : "red.200"}
+              />
+              <Text
+                color={isSocketConnected ? "green.500" : "red.500"}
+                fontWeight="bold"
+              >
+                {isSocketConnected ? "Online" : "Offline"}
+              </Text>
+            </HStack>
+          </Flex>
           <SimpleGrid columns={{ md: 2 }} spacing={4} alignItems="flex-start">
             <AccordionCard
               label={
@@ -164,7 +186,10 @@ const Home: React.FC = () => {
                 />
                 <Flex w="100%" fontSize="sm" justify="space-between">
                   <Text>Box Temperature</Text>
-                  <HStack color={boxTemp >= 35 ? "red.500" : "green.500"}>
+                  <HStack
+                    fontWeight="bold"
+                    color={boxTemp >= 35 ? "red.500" : "green.500"}
+                  >
                     {boxTemp >= 35 && <FaExclamationTriangle />}
                     <Text>{`${boxTemp} C`}</Text>
                   </HStack>
