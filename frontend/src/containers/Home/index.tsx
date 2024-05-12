@@ -121,7 +121,12 @@ const Home: React.FC = () => {
                   Open Image
                 </Button>
               </Flex>
-              <Image src={event?.media_url} mt={10} objectFit="contain" />
+              <Image
+                src={event?.media_url}
+                mt={10}
+                rounded="md"
+                objectFit="contain"
+              />
             </AccordionCard>
             <VStack>
               <VStack
