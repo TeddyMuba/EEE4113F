@@ -25,10 +25,9 @@ io.on("connection", (socket) => {
     console.log("Client disconnected");
   });
 
-  // Handle custom events from the client
   socket.on("message", (data) => {
     console.log("Received message from client:", data);
-    // Broadcast the received message to all clients except the sender
+
     socket.broadcast.emit("message", data);
   });
 });

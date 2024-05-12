@@ -41,9 +41,11 @@ const Home: React.FC = () => {
       setIsSocketConnected(false);
     });
     socket.on("motion-detected", (data) => {
+      console.log(data);
       setData(data);
     });
     socket.on("message", (data) => {
+      console.log(data);
       setData(data);
     });
   }, []);
@@ -83,7 +85,7 @@ const Home: React.FC = () => {
               label={
                 <VStack w="100%" p={4} spacing={0} alignItems="flex-start">
                   <Heading size="md">Nest Motion Detection</Heading>
-                  <Text>
+                  <Text fontSize="sm">
                     Motion Detected: {JSON.stringify(event?.motion_detected)}
                   </Text>
                   <Text fontSize="sm" color="gray.500">

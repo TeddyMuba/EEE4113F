@@ -9,7 +9,7 @@ const ListPair: React.FC<ListPairProps> = ({ label, value }) => (
     <Text fontSize="sm" mr={4}>
       {label}
     </Text>
-    <Text color="gray.500" fontSize="sm" isTruncated fontWeight="bold">
+    <Text color="gray.600" fontSize="sm" isTruncated fontWeight="bold">
       {value}
     </Text>
   </Flex>
